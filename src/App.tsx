@@ -6,7 +6,7 @@ function App() {
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '1rem' }}>
       <Header />
-      <main>
+      <main style={{ paddingTop: '2rem' }}>
         <MainList />
       </main>
     </div>

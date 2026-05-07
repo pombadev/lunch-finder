@@ -53,9 +53,10 @@ button:active {
   border: var(--border);
   box-shadow: var(--shadow);
   padding: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
   position: sticky;
-  top: 1rem;
-  z-index: 20;
+  top: 0;
+  z-index: 100;
+  width: 100%;
 }
 

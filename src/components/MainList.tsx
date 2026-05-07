@@ -48,7 +48,12 @@ export function MainList() {
 
   return (
     <div>
-      <div id='controls-container' style={{ position: 'sticky', top: '7rem', zIndex: 10 }}>
+      <div id='controls-container' style={{
+        position: 'sticky',
+        top: '85px',
+        zIndex: 50,
+        backgroundColor: 'var(--bg)',
+      }}>
         {!location && !geoError && (
           <div style={{ textAlign: 'center', padding: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button onClick={() => { setSurpriseMe(false); getLocation() }} style={{ fontSize: '1.5rem' }}>
