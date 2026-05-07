@@ -5,7 +5,7 @@ import { describe, it, expect } from 'vitest'
 describe('Header', () => {
   it('should render the title', () => {
     render(<Header />)
-    expect(screen.getByText('Lunch Finder')).toBeInTheDocument()
+    expect(screen.getByText('Where\'s my lunch?')).toBeInTheDocument()
   })
 
   it('should have neobrutalist styling classes', () => {

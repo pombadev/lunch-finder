@@ -1,6 +1,6 @@
-# Lunch Finder
+# Where's my lunch?
 
-Can't decide where to eat? Lunch Finder grabs your location and shows you what's nearby — sorted by distance or rating. It's a PWA, so you can slap it on your home screen and use it like a native app.
+Can't decide where to eat? Where's my lunch? grabs your location and shows you what's nearby — sorted by distance or rating. It's a PWA, so you can slap it on your home screen and use it like a native app.
 
 ## What it does
 

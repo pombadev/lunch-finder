@@ -13,8 +13,8 @@ export default defineConfig({
         enabled: true
       },
       manifest: {
-        name: 'Lunch Finder',
-        short_name: 'LunchFinder',
+        name: 'Where\'s my lunch?',
+        short_name: 'Where\'s my lunch?',
         description: 'Find nearby lunch spots quickly',
         theme_color: '#FFD700',
         background_color: '#FFF9E6',
@@ -44,14 +44,14 @@ export default defineConfig({
             sizes: '1280x720',
             type: 'image/png',
             form_factor: 'wide',
-            label: 'Lunch Finder desktop view'
+            label: 'Where\'s my lunch? desktop view'
           },
           {
             src: 'screenshot-narrow.png',
             sizes: '750x1334',
             type: 'image/png',
             form_factor: 'narrow',
-            label: 'Lunch Finder mobile view'
+            label: 'Where\'s my lunch? mobile view'
           }
         ]
       },
