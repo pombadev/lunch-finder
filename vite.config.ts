@@ -17,14 +17,14 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       devOptions: {
         enabled: true
       },
       manifest: {
-        name: 'Where\'s my lunch?',
-        short_name: 'Where\'s my lunch?',
+        name: "Where's my lunch?",
+        short_name: "Where's my lunch?",
         description: 'Find nearby lunch spots quickly',
         theme_color: '#FFD700',
         background_color: '#FFF9E6',
@@ -54,14 +54,14 @@ export default defineConfig({
             sizes: '1280x720',
             type: 'image/png',
             form_factor: 'wide',
-            label: 'Where\'s my lunch? desktop view'
+            label: "Where's my lunch? desktop view"
           },
           {
             src: 'screenshot-narrow.png',
             sizes: '970x1627',
             type: 'image/png',
             form_factor: 'narrow',
-            label: 'Where\'s my lunch? mobile view'
+            label: "Where's my lunch? mobile view"
           }
         ]
       },
