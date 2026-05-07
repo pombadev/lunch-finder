@@ -1,5 +1,6 @@
 import { Header } from './components/Header'
 import { MainList } from './components/MainList'
+import { UpdatePrompt } from './components/UpdatePrompt'
 import './index.css'
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
       <main style={{ paddingTop: '2rem' }}>
         <MainList />
       </main>
+      <UpdatePrompt />
     </div>
   )
 }
