@@ -54,5 +54,8 @@ button:active {
   box-shadow: var(--shadow);
   padding: 1rem;
   margin-bottom: 2rem;
+  position: sticky;
+  top: 1rem;
+  z-index: 20;
 }
 

@@ -3,7 +3,6 @@ import { useGeolocation } from '../hooks/useGeolocation'
 import { fetchNearbyRestaurants, type Restaurant } from '../services/places'
 import { RestaurantCard } from './RestaurantCard'
 
-const INITIAL_SHOW_COUNT = 5
 type SortOption = 'distance' | 'rating'
 
 export function MainList() {
@@ -16,7 +15,6 @@ export function MainList() {
 
   // Sort state
   const [sortBy, setSortBy] = useState<SortOption>('distance')
-  const [showCount, setShowCount] = useState(INITIAL_SHOW_COUNT)
 
   useEffect(() => {
     async function getRestaurants() {
@@ -48,58 +46,58 @@ export function MainList() {
     })
   }, [restaurants, sortBy])
 
-  const visibleRestaurants = sortedRestaurants.slice(0, showCount)
-
   return (
     <div>
-      {!location && !geoError && (
-        <div style={{ textAlign: 'center', padding: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button onClick={() => { setSurpriseMe(false); getLocation() }} style={{ fontSize: '1.5rem' }}>
-            FIND LUNCH
-          </button>
-          <button
-            onClick={() => { setSurpriseMe(true); getLocation() }}
-            style={{ fontSize: '1.5rem', backgroundColor: 'var(--accent)', color: 'white' }}
-          >
-            SURPRISE ME
-          </button>
-        </div>
-      )}
+      <div id='controls-container' style={{ position: 'sticky', top: '7rem', zIndex: 10 }}>
+        {!location && !geoError && (
+          <div style={{ textAlign: 'center', padding: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button onClick={() => { setSurpriseMe(false); getLocation() }} style={{ fontSize: '1.5rem' }}>
+              FIND LUNCH
+            </button>
+            <button
+              onClick={() => { setSurpriseMe(true); getLocation() }}
+              style={{ fontSize: '1.5rem', backgroundColor: 'var(--accent)', color: 'white' }}
+            >
+              SURPRISE ME
+            </button>
+          </div>
+        )}
 
-      {geoError && (
-        <div className="card" style={{ backgroundColor: 'var(--accent)', color: 'white', marginBottom: '1rem' }}>
-          <p>ERROR: {geoError}</p>
-          <button onClick={getLocation} style={{ marginTop: '1rem', backgroundColor: 'white', color: 'black' }}>
-            TRY AGAIN
-          </button>
-        </div>
-      )}
+        {geoError && (
+          <div className="card" style={{ backgroundColor: 'var(--accent)', color: 'white', marginBottom: '1rem' }}>
+            <p>ERROR: {geoError}</p>
+            <button onClick={getLocation} style={{ marginTop: '1rem', backgroundColor: 'white', color: 'black' }}>
+              TRY AGAIN
+            </button>
+          </div>
+        )}
 
-      {location && (
-        <div className="card" style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0 }}>Controls</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <label htmlFor="sortBy" style={{ fontWeight: 'bold' }}>Sort By:</label>
-              <select
-                id="sortBy"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                style={{
-                  padding: '0.3rem',
-                  border: '2px solid black',
-                  fontFamily: 'inherit',
-                  fontWeight: 'bold',
-                  backgroundColor: 'white'
-                }}
-              >
-                <option value="distance">Distance</option>
-                <option value="rating">Rating</option>
-              </select>
+        {location && (
+          <div className="card" style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ margin: 0 }}>Controls</h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <label htmlFor="sortBy" style={{ fontWeight: 'bold' }}>Sort By:</label>
+                <select
+                  id="sortBy"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  style={{
+                    padding: '0.3rem',
+                    border: '2px solid black',
+                    fontFamily: 'inherit',
+                    fontWeight: 'bold',
+                    backgroundColor: 'white'
+                  }}
+                >
+                  <option value="distance">Distance</option>
+                  <option value="rating">Rating</option>
+                </select>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {loading && (
         <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -134,19 +132,11 @@ export function MainList() {
         </div>
       )}
 
-      {!loading && !surpriseMe && visibleRestaurants.length > 0 && (
+      {!loading && !surpriseMe && sortedRestaurants.length > 0 && (
         <div>
-          {visibleRestaurants.map(r => (
+          {sortedRestaurants.map(r => (
             <RestaurantCard key={r.id} restaurant={r} />
           ))}
-
-          {visibleRestaurants.length < sortedRestaurants.length && (
-            <div style={{ textAlign: 'center', marginTop: '1rem', marginBottom: '2rem' }}>
-              <button onClick={() => setShowCount(prev => prev + INITIAL_SHOW_COUNT)}>
-                SHOW MORE
-              </button>
-            </div>
-          )}
         </div>
       )}
 

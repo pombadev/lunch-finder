@@ -21,8 +21,8 @@
   - [x] **Verification:** Hook returns coordinates or error.
 - [x] **Task 4: Places API Service**
   - [x] Write tests for fetching restaurants.
-  - [x] Implement service using Google Places API (Text Search, New) with pagination (up to 60 results).
-  - [x] Fetch fields: id, displayName, formattedAddress, rating, currentOpeningHours, location, websiteUri, nationalPhoneNumber.
+  - [x] Implement service using Google Places API (searchNearby, New) with a maximum of 20 results.
+  - [x] Fetch fields: id, displayName, formattedAddress, rating, currentOpeningHours, location, googleMapsUri. Specify 50 specific food and drink types in `includedTypes`.
   - [x] **Verification:** Mock API response maps correctly to our internal types.
 
 ## Phase 3: UI Components (TDD)
@@ -31,14 +31,15 @@
   - [x] **Verification:** Displays title and logo.
 - [x] **Task 6: Restaurant Card Component**
   - [x] Thick borders, distance badge, rating badge, "Open Now" / "Closed" status badge.
-  - [x] "MORE INFO" button linking to Google Search for the restaurant.
+  - [x] "MORE INFO" button linking directly to the restaurant's Google Maps URI.
   - [x] **Verification:** Renders data correctly with neobrutal styling.
 - [x] **Task 7: Main List & State Orchestration**
   - [x] Combine geolocation and search logic.
   - [x] Sort by distance (default) or rating via dropdown.
   - [x] "FIND LUNCH" button for the full list.
   - [x] "SURPRISE ME" button for random restaurant pick with "PICK AGAIN" and "VIEW ALL".
-  - [x] Loading states, error handling, and "SHOW MORE" pagination.
+  - [x] Loading states, error handling, and strict 20 results limit.
+  - [x] Header and controls container are made sticky to improve scrolling experience.
   - [x] **Verification:** Users can see nearby restaurants upon permission.
 
 ## Phase 4: PWA & Final Polish

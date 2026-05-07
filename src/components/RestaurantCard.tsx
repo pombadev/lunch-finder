@@ -35,7 +35,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
         </span>
       </div>
       <a
-        href={`https://www.google.com/search?q=${encodeURIComponent(restaurant.name + ' ' + restaurant.address)}`}
+        href={restaurant.googleMapsUri || `https://www.google.com/search?q=${encodeURIComponent(restaurant.name + ' ' + restaurant.address)}`}
         target="_blank"
         rel="noopener noreferrer"
         style={{

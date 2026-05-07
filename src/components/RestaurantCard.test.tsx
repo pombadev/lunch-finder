@@ -11,7 +11,11 @@ describe('RestaurantCard', () => {
     openNow: true,
     lat: 34.0,
     lng: -118.0,
-    distance: 100
+    distance: 100,
+    googleMapsUri: 'https://maps.google.com/place',
+    googleMapsLinks: {
+      directionsUri: 'https://maps.google.com/dir'
+    }
   }
 
   it('should render restaurant details', () => {
@@ -27,9 +31,9 @@ describe('RestaurantCard', () => {
     expect(screen.getByText('CLOSED')).toBeInTheDocument()
   })
 
-  it('should have a MORE INFO link that performs a Google Search', () => {
+  it('should have a MORE INFO link that uses googleMapsUri if available', () => {
     render(<RestaurantCard restaurant={mockRestaurant} />)
     const link = screen.getByRole('link', { name: /more info/i })
-    expect(link).toHaveAttribute('href', 'https://www.google.com/search?q=Taco%20Bell%20456%20Taco%20Rd')
+    expect(link).toHaveAttribute('href', 'https://maps.google.com/place')
   })
 })

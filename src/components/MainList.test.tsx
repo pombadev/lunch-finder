@@ -51,38 +51,4 @@ describe('MainList', () => {
     expect(names[0]).toBe('High Rating')
   })
 
-  it('should handle "Show More" functionality', async () => {
-    vi.mocked(geolocationHook.useGeolocation).mockReturnValue({
-      location: { lat: 51.5, lng: 0.1 },
-      error: null,
-      getLocation: mockGetLocation
-    })
-
-    const mockRestaurants = Array.from({ length: 12 }, (_, i) => ({
-      id: `${i}`,
-      name: `Place ${i}`,
-      address: 'Addr',
-      lat: 51.5,
-      lng: 0.1,
-      openNow: true,
-      distance: 100 * i,
-      rating: 4
-    }))
-    vi.mocked(placesService.fetchNearbyRestaurants).mockResolvedValue(mockRestaurants)
-
-    render(<MainList />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Place 0')).toBeInTheDocument()
-      expect(screen.getByText('Place 4')).toBeInTheDocument()
-      expect(screen.queryByText('Place 5')).not.toBeInTheDocument()
-    })
-
-    const showMoreBtn = screen.getByRole('button', { name: /show more/i })
-    fireEvent.click(showMoreBtn)
-
-    expect(screen.getByText('Place 5')).toBeInTheDocument()
-    expect(screen.getByText('Place 9')).toBeInTheDocument()
-    expect(screen.queryByText('Place 10')).not.toBeInTheDocument()
-  })
 })
