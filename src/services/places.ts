@@ -118,8 +118,6 @@ export async function fetchNearbyRestaurants(
     }
   }
 
-
-
   const response = await fetch(url, {
     method: 'POST',
     headers: {
