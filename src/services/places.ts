@@ -16,7 +16,6 @@ export interface Restaurant {
     reviewsUri?: string
     photosUri?: string
   }
-  weekdayDescriptions?: string[]
 }
 
 interface PlacesResponse {
@@ -34,7 +33,7 @@ interface PlacesResponse {
       reviewsUri?: string
       photosUri?: string
     }
-    regularOpeningHours?: { weekdayDescriptions: string[] }
+    businessStatus?: string
   }>
 }
 
@@ -47,7 +46,7 @@ const FIELD_MASKS = [
   'places.location',
   'places.googleMapsLinks',
   'places.googleMapsUri',
-  'places.regularOpeningHours'
+  'places.businessStatus'
 ]
 
 export async function fetchNearbyRestaurants(
@@ -138,18 +137,19 @@ export async function fetchNearbyRestaurants(
   const data: PlacesResponse = await response.json()
   const places = data.places || []
 
-  return places.map(place => ({
-    id: place.id,
-    name: place.displayName.text,
-    address: place.formattedAddress,
-    rating: place.rating,
-    openNow: place.currentOpeningHours?.openNow,
-    lat: place.location.latitude,
-    lng: place.location.longitude,
-    distance: Math.round(calculateDistance({ lat, lng }, { lat: place.location.latitude, lng: place.location.longitude })),
-    googleMapsUri: place.googleMapsUri,
-    googleMapsLinks: place.googleMapsLinks,
-    weekdayDescriptions: place.regularOpeningHours?.weekdayDescriptions
-  }))
+  return places
+    .filter(place => place.businessStatus !== 'CLOSED_PERMANENTLY')
+    .map(place => ({
+      id: place.id,
+      name: place.displayName.text,
+      address: place.formattedAddress,
+      rating: place.rating,
+      openNow: place.currentOpeningHours?.openNow,
+      lat: place.location.latitude,
+      lng: place.location.longitude,
+      distance: Math.round(calculateDistance({ lat, lng }, { lat: place.location.latitude, lng: place.location.longitude })),
+      googleMapsUri: place.googleMapsUri,
+      googleMapsLinks: place.googleMapsLinks
+    }))
 }
 
