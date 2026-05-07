@@ -4,6 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/lunch-finder/',
   server: {
     port: 5000
   },
@@ -22,7 +23,7 @@ export default defineConfig({
         theme_color: '#FFD700',
         background_color: '#FFF9E6',
         display: 'standalone',
-        start_url: '/',
+        start_url: '/lunch-finder/',
         icons: [
           {
             src: 'pwa-192x192.png',
