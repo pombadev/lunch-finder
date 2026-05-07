@@ -16,6 +16,7 @@ export interface Restaurant {
     reviewsUri?: string
     photosUri?: string
   }
+  weekdayDescriptions?: string[]
 }
 
 interface PlacesResponse {
@@ -33,6 +34,7 @@ interface PlacesResponse {
       reviewsUri?: string
       photosUri?: string
     }
+    regularOpeningHours?: { weekdayDescriptions: string[] }
   }>
 }
 
@@ -44,7 +46,8 @@ const FIELD_MASKS = [
   'places.currentOpeningHours',
   'places.location',
   'places.googleMapsLinks',
-  'places.googleMapsUri'
+  'places.googleMapsUri',
+  'places.regularOpeningHours'
 ]
 
 export async function fetchNearbyRestaurants(
@@ -145,7 +148,8 @@ export async function fetchNearbyRestaurants(
     lng: place.location.longitude,
     distance: Math.round(calculateDistance({ lat, lng }, { lat: place.location.latitude, lng: place.location.longitude })),
     googleMapsUri: place.googleMapsUri,
-    googleMapsLinks: place.googleMapsLinks
+    googleMapsLinks: place.googleMapsLinks,
+    weekdayDescriptions: place.regularOpeningHours?.weekdayDescriptions
   }))
 }
 

@@ -34,6 +34,18 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
           {restaurant.openNow ? 'OPEN NOW' : 'CLOSED'}
         </span>
       </div>
+
+      {restaurant.weekdayDescriptions && (
+        <details style={{ marginBottom: '1.5rem', cursor: 'pointer' }}>
+          <summary style={{ fontWeight: 'bold', fontSize: '0.9rem', textDecoration: 'underline' }}>WEEKLY HOURS</summary>
+          <ul style={{ listStyle: 'none', padding: '0.5rem 0', margin: 0, fontSize: '0.85rem' }}>
+            {restaurant.weekdayDescriptions.map((day, i) => (
+              <li key={i} style={{ marginBottom: '0.2rem' }}>{day}</li>
+            ))}
+          </ul>
+        </details>
+      )}
+
       <a
         href={restaurant.googleMapsUri || `https://www.google.com/search?q=${encodeURIComponent(restaurant.name + ' ' + restaurant.address)}`}
         target="_blank"
