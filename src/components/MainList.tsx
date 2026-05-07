@@ -75,7 +75,7 @@ export function MainList() {
         {location && (
           <div className="card" style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0 }}>Controls</h3>
+              <h3 style={{ margin: 0 }}>Filters</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <label htmlFor="sortBy" style={{ fontWeight: 'bold' }}>Sort By:</label>
                 <select
