@@ -1,0 +1,45 @@
+# Lunch Finder
+
+Can't decide where to eat? Lunch Finder grabs your location and shows you what's nearby — sorted by distance or rating. It's a PWA, so you can slap it on your home screen and use it like a native app.
+
+## What it does
+
+- Uses your browser's geolocation to find restaurants around you
+- Sort by distance or rating
+- "Surprise Me" mode picks a random spot for you
+- Installable as a PWA on mobile and desktop
+
+## Stack
+
+- React 19 + TypeScript
+- Vite
+- Google Places API (Text Search)
+- Vanilla CSS (neobrutalist style)
+- Vitest + React Testing Library
+
+## Setup
+
+You'll need a [Google Places API key](https://developers.google.com/maps/documentation/places/web-service/get-api-key). Create a `.env` file:
+
+```
+VITE_GOOGLE_PLACES_API_KEY=your_key_here
+```
+
+Then:
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173` and hit "Find Lunch".
+
+## Tests
+
+```bash
+npm test
+```
+
+## License
+
+Apache 2.0 — see [LICENSE](LICENSE) for details.

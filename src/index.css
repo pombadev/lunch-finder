@@ -1,0 +1,58 @@
+:root {
+  --bg: #FFF9E6;
+  --primary: #FFD700;
+  --accent: #FF4B2B;
+  --text: #000000;
+  --border-width: 3px;
+  --shadow: 5px 5px 0px 0px #000000;
+  --border: var(--border-width) solid var(--text);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Arial Black', Gadget, sans-serif;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4 {
+  text-transform: uppercase;
+}
+
+button {
+  background-color: var(--primary);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+button:active {
+  box-shadow: none;
+  transform: translate(2px, 2px);
+}
+
+.card {
+  background-color: #ffffff;
+  border: var(--border);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+}
+
+.neobrutal-header {
+  background-color: var(--primary);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
