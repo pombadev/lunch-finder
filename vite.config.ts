@@ -58,7 +58,7 @@ export default defineConfig({
           },
           {
             src: 'screenshot-narrow.png',
-            sizes: '750x1334',
+            sizes: '970x1627',
             type: 'image/png',
             form_factor: 'narrow',
             label: 'Where\'s my lunch? mobile view'
