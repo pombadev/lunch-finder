@@ -77,7 +77,7 @@ describe("MainList", () => {
       );
     });
 
-    const sortSelect = screen.getByLabelText(/sort by/i);
+    const sortSelect = screen.getByLabelText(/sort/i);
     fireEvent.change(sortSelect, { target: { value: "popularity" } });
 
     await waitFor(() => {

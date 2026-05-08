@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useGeolocation } from "../hooks/useGeolocation";
 import {
   fetchNearbyRestaurants,
@@ -6,7 +6,35 @@ import {
   type Restaurant,
 } from "../services/places";
 import { RestaurantCard } from "./RestaurantCard";
-import { FilterControls, type SortOption } from "./FilterControls";
+import { RestaurantCardSkeleton } from "./RestaurantCardSkeleton";
+import {
+  FilterControls,
+  type SortOption,
+  type FilterChip,
+} from "./FilterControls";
+
+function getGeoErrorDetails(error: string): { message: string; hint: string } {
+  const lower = error.toLowerCase();
+  if (lower.includes("denied") || lower.includes("permission")) {
+    return {
+      message: "Location access was denied.",
+      hint: 'Open your browser settings → "Location" → allow this site.',
+    };
+  }
+  if (lower.includes("unavailable")) {
+    return {
+      message: "Your location could not be determined.",
+      hint: "Make sure GPS or Wi-Fi is enabled and try again.",
+    };
+  }
+  if (lower.includes("timeout")) {
+    return {
+      message: "Location request timed out.",
+      hint: "Your GPS is taking too long. Try again in a moment.",
+    };
+  }
+  return { message: error, hint: "Please try again." };
+}
 
 export function MainList() {
   const { location, error: geoError, getLocation } = useGeolocation();
@@ -15,15 +43,16 @@ export function MainList() {
   const [apiError, setApiError] = useState<string | null>(null);
   const [surpriseMe, setSurpriseMe] = useState(false);
   const [surprisePick, setSurprisePick] = useState<Restaurant | null>(null);
-
-  // Sort state
+  const [excludedIds, setExcludedIds] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<SortOption>("distance");
+  const [activeChips, setActiveChips] = useState<Set<FilterChip>>(new Set());
 
   useEffect(() => {
     async function getRestaurants() {
       if (!location) return;
       setLoading(true);
       setApiError(null);
+      setExcludedIds(new Set());
       try {
         const rankPreference: RankPreference =
           sortBy === "distance" ? "DISTANCE" : "POPULARITY";
@@ -40,6 +69,51 @@ export function MainList() {
     }
     getRestaurants();
   }, [location, surpriseMe, sortBy]);
+
+  function handleChipToggle(chip: FilterChip) {
+    setActiveChips((prev) => {
+      const next = new Set(prev);
+      if (next.has(chip)) {
+        next.delete(chip);
+      } else {
+        next.add(chip);
+      }
+      return next;
+    });
+  }
+
+  const filteredRestaurants = useMemo(() => {
+    return restaurants.filter((r) => {
+      if (activeChips.has("openNow") && !r.openNow) return false;
+      if (activeChips.has("under500m") && r.distance > 500) return false;
+      if (activeChips.has("topRated") && (r.rating ?? 0) < 4.0) return false;
+      return true;
+    });
+  }, [restaurants, activeChips]);
+
+  function handlePickAgain() {
+    const available = restaurants.filter((r) => !excludedIds.has(r.id));
+    const pool = available.length > 0 ? available : restaurants;
+    setSurprisePick(pool[Math.floor(Math.random() * pool.length)]);
+  }
+
+  function handleExclude() {
+    if (!surprisePick) return;
+    const newExcluded = new Set([...excludedIds, surprisePick.id]);
+    setExcludedIds(newExcluded);
+    const available = restaurants.filter((r) => !newExcluded.has(r.id));
+    if (available.length > 0) {
+      setSurprisePick(available[Math.floor(Math.random() * available.length)]);
+    } else {
+      // All excluded — reset and start over
+      setExcludedIds(new Set());
+      setSurprisePick(
+        restaurants[Math.floor(Math.random() * restaurants.length)],
+      );
+    }
+  }
+
+  const geoErrorDetails = geoError ? getGeoErrorDetails(geoError) : null;
 
   return (
     <div>
@@ -88,7 +162,7 @@ export function MainList() {
           </div>
         )}
 
-        {geoError && (
+        {geoError && geoErrorDetails && (
           <div
             className="card"
             style={{
@@ -97,7 +171,16 @@ export function MainList() {
               marginBottom: "1rem",
             }}
           >
-            <p>ERROR: {geoError}</p>
+            <p style={{ fontWeight: "bold" }}>{geoErrorDetails.message}</p>
+            <p
+              style={{
+                fontSize: "0.9rem",
+                marginTop: "0.25rem",
+                fontFamily: "Arial, sans-serif",
+              }}
+            >
+              {geoErrorDetails.hint}
+            </p>
             <button
               onClick={getLocation}
               style={{
@@ -112,13 +195,20 @@ export function MainList() {
         )}
 
         {location && (
-          <FilterControls sortBy={sortBy} onSortChange={setSortBy} />
+          <FilterControls
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            activeChips={activeChips}
+            onChipToggle={handleChipToggle}
+          />
         )}
       </div>
 
       {loading && (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
-          <h2>SEARCHING...</h2>
+        <div>
+          {[1, 2, 3].map((n) => (
+            <RestaurantCardSkeleton key={n} />
+          ))}
         </div>
       )}
 
@@ -133,10 +223,21 @@ export function MainList() {
 
       {!loading && surpriseMe && surprisePick && (
         <div>
-          <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-            <h2>YOUR PICK</h2>
+          <div style={{ textAlign: "center", marginBottom: "0.5rem" }}>
+            <h2>Your Pick</h2>
+            <p className="surprise-why">
+              {surprisePick.distance}m away
+              {surprisePick.rating ? ` · ★ ${surprisePick.rating}` : ""}
+              {surprisePick.openNow === true
+                ? " · Open now"
+                : surprisePick.openNow === false
+                  ? " · Closed"
+                  : ""}
+            </p>
           </div>
-          <RestaurantCard restaurant={surprisePick} />
+          <div key={surprisePick.id} className="surprise-card">
+            <RestaurantCard restaurant={surprisePick} />
+          </div>
           <div
             style={{
               textAlign: "center",
@@ -145,37 +246,71 @@ export function MainList() {
               display: "flex",
               gap: "1rem",
               justifyContent: "center",
+              flexWrap: "wrap",
             }}
           >
+            <button onClick={handlePickAgain}>PICK AGAIN</button>
             <button
-              onClick={() => {
-                if (restaurants.length > 0) {
-                  setSurprisePick(
-                    restaurants[Math.floor(Math.random() * restaurants.length)],
-                  );
-                }
-              }}
+              onClick={handleExclude}
+              style={{ backgroundColor: "white" }}
             >
-              PICK AGAIN
+              EXCLUDE THIS
             </button>
             <button onClick={() => setSurpriseMe(false)}>VIEW ALL</button>
           </div>
         </div>
       )}
 
-      {!loading && !surpriseMe && restaurants.length > 0 && (
+      {!loading && !surpriseMe && filteredRestaurants.length > 0 && (
         <div>
-          {restaurants.map((r) => (
+          {filteredRestaurants.map((r) => (
             <RestaurantCard key={r.id} restaurant={r} />
           ))}
         </div>
       )}
 
-      {!loading && location && restaurants.length === 0 && !apiError && (
+      {!loading && location && !apiError && restaurants.length === 0 && (
         <div className="card">
-          <p>No restaurants found nearby. Maybe try a different spot?</p>
+          <p style={{ marginBottom: "0.5rem" }}>No restaurants found nearby.</p>
+          <p
+            style={{
+              fontSize: "0.9rem",
+              fontFamily: "Arial, sans-serif",
+              color: "#555",
+            }}
+          >
+            Try switching to <strong>Most popular</strong> sort or searching
+            from a different location.
+          </p>
         </div>
       )}
+
+      {!loading &&
+        location &&
+        !apiError &&
+        restaurants.length > 0 &&
+        filteredRestaurants.length === 0 && (
+          <div className="card">
+            <p style={{ marginBottom: "0.5rem" }}>
+              No restaurants match your filters.
+            </p>
+            <p
+              style={{
+                fontSize: "0.9rem",
+                fontFamily: "Arial, sans-serif",
+                color: "#555",
+              }}
+            >
+              Try removing a filter to see more options.
+            </p>
+            <button
+              onClick={() => setActiveChips(new Set())}
+              style={{ marginTop: "0.75rem" }}
+            >
+              CLEAR FILTERS
+            </button>
+          </div>
+        )}
     </div>
   );
 }
