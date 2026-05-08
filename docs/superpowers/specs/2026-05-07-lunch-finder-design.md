@@ -6,13 +6,13 @@
 
 ## Overview
 
-A web application (PWA) that helps users find nearby lunch spots quickly. It uses the user's precise location to fetch and display restaurants sorted by distance or rating, with a focus on ease of use and immediate action.
+A web application (PWA) that helps users find nearby lunch spots quickly. It uses the user's precise location to fetch and display restaurants sorted by distance or popularity, with a focus on ease of use and immediate action.
 
 ## Core Features
 
 1. **Precise Geolocation:** Uses the browser's Geolocation API to get the user's current coordinates.
 2. **Search with Location Bias:** Integrates with the Google Places API (searchNearby, New) to find up to 50 specific food and drink place types near the user. Uses `locationRestriction` with a 1000m radius. Strictly limits results to 20 locations.
-3. **Sorting:** Results can be sorted by distance (default) or rating via a dropdown control.
+3. **Sorting:** Results can be sorted by distance (default) or popularity via a dropdown control. Sorting is handled by the Places API `rankPreference` (`DISTANCE` or `POPULARITY`).
 4. **"Open Now" Display:** Each restaurant card shows an "OPEN NOW" or "CLOSED" badge based on current opening hours. All restaurants are displayed regardless of open status.
 5. **"More Info" Link:** Each card has a "MORE INFO" button that links directly to the restaurant's `googleMapsUri`, giving users quick access to reviews, menus, and contact info within Google Maps.
 6. **"Surprise Me" Mode:** A randomizer mode that picks a single restaurant from the results. Users can re-roll with "PICK AGAIN" or switch to the full list with "VIEW ALL".
@@ -30,7 +30,7 @@ A web application (PWA) that helps users find nearby lunch spots quickly. It use
 - **Frontend:** React (TypeScript) for component-based UI.
 - **Styling:** Vanilla CSS for maximum flexibility and neobrutalism implementation.
 - **Data Fetching:** Client-side requests to Google Places API (searchNearby, New) with a maximum of 20 results.
-- **State Management:** React Hooks (useState, useEffect, useMemo) for location, restaurant data, sort order, and surprise mode.
+- **State Management:** React Hooks (useState, useEffect) for location, restaurant data, sort order, and surprise mode.
 
 ## Data Model
 

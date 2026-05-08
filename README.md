@@ -1,11 +1,11 @@
 # Where's my lunch?
 
-Can't decide where to eat? Where's my lunch? grabs your location and shows you what's nearby — sorted by distance or rating. It's a PWA, so you can slap it on your home screen and use it like a native app.
+Can't decide where to eat? Where's my lunch? grabs your location and shows you what's nearby — sorted by distance or popularity. It's a PWA, so you can slap it on your home screen and use it like a native app.
 
 ## What it does
 
 - Uses your browser's geolocation to find restaurants around you
-- Sort by distance or rating
+- Sort by distance or popularity (API-ranked)
 - "Surprise Me" mode picks a random spot for you
 - Installable as a PWA on mobile and desktop
 
@@ -13,7 +13,7 @@ Can't decide where to eat? Where's my lunch? grabs your location and shows you w
 
 - React 19 + TypeScript
 - Vite
-- Google Places API (Text Search)
+- Google Places API (Places API New / `searchNearby`)
 - Vanilla CSS (neobrutalist style)
 - Vitest + React Testing Library
 
@@ -32,7 +32,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173` and hit "Find Lunch".
+Open `http://localhost:5173` and click "Find Lunch".
 
 ## Tests
 

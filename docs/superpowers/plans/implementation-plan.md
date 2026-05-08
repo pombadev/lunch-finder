@@ -38,7 +38,7 @@
   - [x] **Verification:** Renders data correctly with neobrutal styling.
 - [x] **Task 7: Main List & State Orchestration**
   - [x] Combine geolocation and search logic.
-  - [x] Sort by distance (default) or rating via dropdown.
+  - [x] Sort by distance (default) or popularity via dropdown, mapped to Places API `rankPreference`.
   - [x] "FIND LUNCH" button for the full list.
   - [x] "SURPRISE ME" button for random restaurant pick with "PICK AGAIN" and "VIEW ALL".
   - [x] Loading states, error handling, and strict 20 results limit.
