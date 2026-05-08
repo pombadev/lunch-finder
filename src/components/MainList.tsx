@@ -225,15 +225,24 @@ export function MainList() {
         <div>
           <div style={{ textAlign: "center", marginBottom: "0.5rem" }}>
             <h2>Your Pick</h2>
-            <p className="surprise-why">
-              {surprisePick.distance}m away
-              {surprisePick.rating ? ` · ★ ${surprisePick.rating}` : ""}
-              {surprisePick.openNow === true
-                ? " · Open now"
-                : surprisePick.openNow === false
-                  ? " · Closed"
-                  : ""}
-            </p>
+            <div className="surprise-why">
+              <span className="surprise-tag">
+                {surprisePick.distance}m away
+              </span>
+              {surprisePick.rating && (
+                <span className="surprise-tag">★ {surprisePick.rating}</span>
+              )}
+              {surprisePick.openNow === true && (
+                <span className="surprise-tag surprise-tag--open">
+                  Open now
+                </span>
+              )}
+              {surprisePick.openNow === false && (
+                <span className="surprise-tag surprise-tag--closed">
+                  Closed
+                </span>
+              )}
+            </div>
           </div>
           <div key={surprisePick.id} className="surprise-card">
             <RestaurantCard restaurant={surprisePick} />

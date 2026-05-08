@@ -15,9 +15,18 @@ export function UpdatePrompt() {
         <button
           id="update-reload-btn"
           onClick={() => {
-            updateServiceWorker(true).finally(() => {
-              window.location.reload();
-            });
+            // Wait for the new SW to actually take control before reloading.
+            // Using controllerchange avoids a double-reload race where
+            // updateServiceWorker(true)'s internal reload and a manual
+            // reload fire concurrently, aborting in-flight asset fetches.
+            if ("serviceWorker" in navigator) {
+              navigator.serviceWorker.addEventListener(
+                "controllerchange",
+                () => window.location.reload(),
+                { once: true },
+              );
+            }
+            updateServiceWorker(false);
           }}
         >
           UPDATE
