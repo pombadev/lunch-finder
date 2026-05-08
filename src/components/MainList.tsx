@@ -1,67 +1,87 @@
-import { useState, useEffect, useMemo } from 'react'
-import { useGeolocation } from '../hooks/useGeolocation'
-import { fetchNearbyRestaurants, type Restaurant } from '../services/places'
-import { RestaurantCard } from './RestaurantCard'
-
-type SortOption = 'distance' | 'rating'
+import { useState, useEffect } from "react";
+import { useGeolocation } from "../hooks/useGeolocation";
+import {
+  fetchNearbyRestaurants,
+  type RankPreference,
+  type Restaurant,
+} from "../services/places";
+import { RestaurantCard } from "./RestaurantCard";
+import { FilterControls, type SortOption } from "./FilterControls";
 
 export function MainList() {
-  const { location, error: geoError, getLocation } = useGeolocation()
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([])
-  const [loading, setLoading] = useState(false)
-  const [apiError, setApiError] = useState<string | null>(null)
-  const [surpriseMe, setSurpriseMe] = useState(false)
-  const [surprisePick, setSurprisePick] = useState<Restaurant | null>(null)
+  const { location, error: geoError, getLocation } = useGeolocation();
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [surpriseMe, setSurpriseMe] = useState(false);
+  const [surprisePick, setSurprisePick] = useState<Restaurant | null>(null);
 
   // Sort state
-  const [sortBy, setSortBy] = useState<SortOption>('distance')
+  const [sortBy, setSortBy] = useState<SortOption>("distance");
 
   useEffect(() => {
     async function getRestaurants() {
-      if (!location) return
-      setLoading(true)
-      setApiError(null)
+      if (!location) return;
+      setLoading(true);
+      setApiError(null);
       try {
-        const data = await fetchNearbyRestaurants(location)
-        setRestaurants(data)
+        const rankPreference: RankPreference =
+          sortBy === "distance" ? "DISTANCE" : "POPULARITY";
+        const data = await fetchNearbyRestaurants(location, rankPreference);
+        setRestaurants(data);
         if (surpriseMe && data.length > 0) {
-          setSurprisePick(data[Math.floor(Math.random() * data.length)])
+          setSurprisePick(data[Math.floor(Math.random() * data.length)]);
         }
       } catch (err) {
-        setApiError(err instanceof Error ? err.message : 'Unknown error')
+        setApiError(err instanceof Error ? err.message : "Unknown error");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-    getRestaurants()
-  }, [location, surpriseMe])
-
-  const sortedRestaurants = useMemo(() => {
-    return [...restaurants].sort((a, b) => {
-      if (sortBy === 'distance') {
-        return a.distance - b.distance
-      } else {
-        return (b.rating || 0) - (a.rating || 0) // Highest rating first
-      }
-    })
-  }, [restaurants, sortBy])
+    getRestaurants();
+  }, [location, surpriseMe, sortBy]);
 
   return (
     <div>
-      <div id='controls-container' style={{
-        position: 'sticky',
-        top: '85px',
-        zIndex: 50,
-        backgroundColor: 'var(--bg)',
-      }}>
+      <div
+        id="controls-container"
+        style={{
+          position: "sticky",
+          top: "85px",
+          zIndex: 50,
+          backgroundColor: "var(--bg)",
+        }}
+      >
         {!location && !geoError && (
-          <div style={{ textAlign: 'center', padding: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => { setSurpriseMe(false); getLocation() }} style={{ fontSize: '1.5rem' }}>
+          <div
+            style={{
+              textAlign: "center",
+              padding: "2rem",
+              display: "flex",
+              gap: "1rem",
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <button
+              onClick={() => {
+                setSurpriseMe(false);
+                getLocation();
+              }}
+              style={{ fontSize: "1.5rem" }}
+            >
               FIND LUNCH
             </button>
             <button
-              onClick={() => { setSurpriseMe(true); getLocation() }}
-              style={{ fontSize: '1.5rem', backgroundColor: 'var(--accent)', color: 'white' }}
+              onClick={() => {
+                setSurpriseMe(true);
+                getLocation();
+              }}
+              style={{
+                fontSize: "1.5rem",
+                backgroundColor: "var(--accent)",
+                color: "white",
+              }}
             >
               SURPRISE ME
             </button>
@@ -69,87 +89,93 @@ export function MainList() {
         )}
 
         {geoError && (
-          <div className="card" style={{ backgroundColor: 'var(--accent)', color: 'white', marginBottom: '1rem' }}>
+          <div
+            className="card"
+            style={{
+              backgroundColor: "var(--accent)",
+              color: "white",
+              marginBottom: "1rem",
+            }}
+          >
             <p>ERROR: {geoError}</p>
-            <button onClick={getLocation} style={{ marginTop: '1rem', backgroundColor: 'white', color: 'black' }}>
+            <button
+              onClick={getLocation}
+              style={{
+                marginTop: "1rem",
+                backgroundColor: "white",
+                color: "black",
+              }}
+            >
               TRY AGAIN
             </button>
           </div>
         )}
 
         {location && (
-          <div className="card" style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0 }}>Filters</h3>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <label htmlFor="sortBy" style={{ fontWeight: 'bold' }}>Sort By:</label>
-                <select
-                  id="sortBy"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  style={{
-                    padding: '0.3rem',
-                    border: '2px solid black',
-                    fontFamily: 'inherit',
-                    fontWeight: 'bold',
-                    backgroundColor: 'white'
-                  }}
-                >
-                  <option value="distance">Distance</option>
-                  <option value="rating">Rating</option>
-                </select>
-              </div>
-            </div>
-          </div>
+          <FilterControls sortBy={sortBy} onSortChange={setSortBy} />
         )}
       </div>
 
       {loading && (
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
+        <div style={{ textAlign: "center", padding: "2rem" }}>
           <h2>SEARCHING...</h2>
         </div>
       )}
 
       {apiError && (
-        <div className="card" style={{ backgroundColor: 'var(--accent)', color: 'white' }}>
+        <div
+          className="card"
+          style={{ backgroundColor: "var(--accent)", color: "white" }}
+        >
           <p>API ERROR: {apiError}</p>
         </div>
       )}
 
       {!loading && surpriseMe && surprisePick && (
         <div>
-          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+          <div style={{ textAlign: "center", marginBottom: "1rem" }}>
             <h2>YOUR PICK</h2>
           </div>
           <RestaurantCard restaurant={surprisePick} />
-          <div style={{ textAlign: 'center', marginTop: '1rem', marginBottom: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            <button onClick={() => {
-              if (restaurants.length > 0) {
-                setSurprisePick(restaurants[Math.floor(Math.random() * restaurants.length)])
-              }
-            }}>
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "1rem",
+              marginBottom: "2rem",
+              display: "flex",
+              gap: "1rem",
+              justifyContent: "center",
+            }}
+          >
+            <button
+              onClick={() => {
+                if (restaurants.length > 0) {
+                  setSurprisePick(
+                    restaurants[Math.floor(Math.random() * restaurants.length)],
+                  );
+                }
+              }}
+            >
               PICK AGAIN
             </button>
-            <button onClick={() => setSurpriseMe(false)}>
-              VIEW ALL
-            </button>
+            <button onClick={() => setSurpriseMe(false)}>VIEW ALL</button>
           </div>
         </div>
       )}
 
-      {!loading && !surpriseMe && sortedRestaurants.length > 0 && (
+      {!loading && !surpriseMe && restaurants.length > 0 && (
         <div>
-          {sortedRestaurants.map(r => (
+          {restaurants.map((r) => (
             <RestaurantCard key={r.id} restaurant={r} />
           ))}
         </div>
       )}
 
-      {!loading && location && sortedRestaurants.length === 0 && !apiError && (
+      {!loading && location && restaurants.length === 0 && !apiError && (
         <div className="card">
           <p>No restaurants found nearby. Maybe try a different spot?</p>
         </div>
       )}
     </div>
-  )
+  );
 }

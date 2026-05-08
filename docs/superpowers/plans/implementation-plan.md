@@ -5,6 +5,7 @@
 **Date:** 2026-05-07
 
 ## Phase 1: Foundation & Setup
+
 - [x] **Task 1: Initialize Project**
   - [x] Use Vite to create a React + TypeScript project.
   - [x] Cleanup boilerplate.
@@ -15,6 +16,7 @@
   - [x] **Verification:** App shows a neobrutalistic "Hello World".
 
 ## Phase 2: Core Logic (TDD)
+
 - [x] **Task 3: Geolocation Hook**
   - [x] Write tests for a `useGeolocation` hook.
   - [x] Implement hook using `navigator.geolocation`.
@@ -26,6 +28,7 @@
   - [x] **Verification:** Mock API response maps correctly to our internal types.
 
 ## Phase 3: UI Components (TDD)
+
 - [x] **Task 5: Header Component**
   - [x] Bold, yellow background, black border.
   - [x] **Verification:** Displays title and logo.
@@ -43,6 +46,7 @@
   - [x] **Verification:** Users can see nearby restaurants upon permission.
 
 ## Phase 4: PWA & Final Polish
+
 - [x] **Task 8: PWA Manifest & Service Worker**
   - [x] Setup `vite-plugin-pwa` with `devOptions: { enabled: true }` for dev testing.
   - [x] Configure icons (192x192, 512x512, maskable) from favicon.svg.

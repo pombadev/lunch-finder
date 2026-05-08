@@ -1,12 +1,12 @@
-import { useRegisterSW } from 'virtual:pwa-register/react'
+import { useRegisterSW } from "virtual:pwa-register/react";
 
 export function UpdatePrompt() {
   const {
     needRefresh: [needRefresh],
     updateServiceWorker,
-  } = useRegisterSW()
+  } = useRegisterSW();
 
-  if (!needRefresh) return null
+  if (!needRefresh) return null;
 
   return (
     <div className="update-prompt" role="alert" aria-live="polite">
@@ -17,12 +17,12 @@ export function UpdatePrompt() {
           onClick={() => {
             updateServiceWorker(true).finally(() => {
               window.location.reload();
-            })
+            });
           }}
         >
           UPDATE
         </button>
       </div>
     </div>
-  )
+  );
 }
